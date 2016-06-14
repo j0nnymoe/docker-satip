@@ -32,5 +32,3 @@ apk add --no-cache \
 
 # clean up
  rm -rf /var/cache/apk/* /tmp/*
-
-
