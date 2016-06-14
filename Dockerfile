@@ -1,15 +1,19 @@
-FROM ubuntu:16.04
+FROM alpine:3.4
 
 # install build dependencies
 RUN \
- apt-get update && \
- apt-get install -y \
+ apk add --no-cache --virtual=build-dependencies \
+	curl \
 	g++ \
 	gcc \
-	libdvbcsa-dev \
-	libssh-dev \
+	openssl-dev \
 	make \
+	tar \
 	wget && \
+
+apk add --no-cache \
+	libdvbcsa-dev \
+	linux-headers && \
 
 # fetch source
  wget -O \
@@ -22,21 +26,11 @@ RUN \
 	./configure && \
 	make && \
 
-# uninstall build dependencies
- apt-get purge --remove -y \
-	g++ \
-	gcc \
-	libssh-dev \
-	make \
-        wget && \
+ # uninstall build dependencies
+ apk del --purge \
+	build-dependencies && \
 
- apt-get autoremove -y && \
- apt-get autoclean -y && \
+# clean up
+ rm -rf /var/cache/apk/* /tmp/*
 
-# install runtime dependencies
- apt-get install -y \
-	openssl && \
 
-# cleanup
- apt-get clean && \
- rm -rfv /tmp/* /var/lib/apt/lists/* /var/tmp/*
