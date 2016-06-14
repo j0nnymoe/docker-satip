@@ -32,3 +32,11 @@ apk add --no-cache \
 
 # clean up
  rm -rf /var/cache/apk/* /tmp/*
+
+# add runtime dependencies
+RUN \
+ apk add --no-cache \
+	openssl && \
+
+# clean up
+ rm -rf /var/cache/apk/*
