@@ -11,11 +11,20 @@ RUN \
 	tar \
 	wget && \
 
-apk add --no-cache \
-	libdvbcsa-dev \
-	linux-headers && \
+# add s6 overlay
+  wget -O \
+	/tmp/s6-overlay.tar.gz -L \
+	https://github.com/just-containers/s6-overlay/releases/download/v1.17.1.1/s6-overlay-amd64.tar.gz && \
+	tar xvfz /tmp/s6-overlay.tar.gz -C / && \
 
-# fetch source
+# add runtime dependencies
+ apk add --no-cache \
+	libdvbcsa-dev \
+	linux-headers \
+	s6 \
+	s6-portable-utils && \
+
+# fetch satip source
  wget -O \
 	/tmp/satip.tar.gz https://github.com/catalinii/minisatip/archive/master.tar.gz && \
 	mkdir -p /app/satip && \
@@ -25,15 +34,6 @@ apk add --no-cache \
  cd /app/satip && \
 	./configure && \
 	make && \
-
-# add s6 overlay
-  curl -o /tmp/s6-overlay.tar.gz -L \
-	https://github.com/just-containers/s6-overlay/releases/download/v1.17.1.1/s6-overlay-amd64.tar.gz && \
- tar xvfz /tmp/s6-overlay.tar.gz -C / && \
-
- apk add --update \
-	s6 \
-	s6-portable-utils && \
 
  # uninstall build dependencies
  apk del --purge \
