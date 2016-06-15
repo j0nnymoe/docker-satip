@@ -26,6 +26,15 @@ apk add --no-cache \
 	./configure && \
 	make && \
 
+# add s6 overlay
+  curl -o /tmp/s6-overlay.tar.gz -L \
+	https://github.com/just-containers/s6-overlay/releases/download/v1.17.1.1/s6-overlay-amd64.tar.gz && \
+ tar xvfz /tmp/s6-overlay.tar.gz -C / && \
+
+ apk add --update \
+	s6 \
+	s6-portable-utils && \
+
  # uninstall build dependencies
  apk del --purge \
 	build-dependencies && \
@@ -40,3 +49,11 @@ RUN \
 
 # clean up
  rm -rf /var/cache/apk/*
+
+# add local files
+COPY root/ /
+
+ENTRYPOINT ["/init"]
+
+# ports and volumes
+EXPOSE 8875 554 1900/udp
