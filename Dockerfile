@@ -1,6 +1,6 @@
 FROM alpine:3.4
 
-# install build dependencies
+# install build dependencies #blahtest
 RUN \
  apk add --no-cache --virtual=build-dependencies \
 	curl \
